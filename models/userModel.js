@@ -9,17 +9,22 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     role: { type: String, default:'User' },
     createdAt:{type:Date, default:Date.now()},
+    avatar:{type:String},
     historyId:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"HistoryModel"
     }],
-    commentId:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"CommentModel",
-        subcommentId:[{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"SubcommentModel"
-        }]
+    commentId: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CommentModel"
+    }],
+    subcommentId: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "SubcommentModel"
+    }],
+    like: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'LikeModel'
     }]
 })
 

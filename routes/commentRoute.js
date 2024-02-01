@@ -4,7 +4,7 @@ const Controller = require('../controllers/commentController')
 const {verifyUserToken} = require('../middleware/verify')
 const {USER_TOKEN_SECRET} = process.env
 
-router.post('/product/:id/comment/add', Controller.addComment)
-router.post('/product/:id/comment/update/:commentId', Controller.updateComment)
+router.post('/add/product/:id', verifyUserToken(USER_TOKEN_SECRET), Controller.addComment)
+router.post('/update/:commentId/product/:id', verifyUserToken(USER_TOKEN_SECRET), Controller.updateComment)
 
 module.exports = router

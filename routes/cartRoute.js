@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Controller = require('../controllers/cartController')
-const {verifyUserToken, verifyAdminToken} = require('../middleware/verify')
+const {verifyUserToken} = require('../middleware/verify')
 const {USER_TOKEN_SECRET} = process.env
 
 router.post('/buy', verifyUserToken(USER_TOKEN_SECRET), Controller.buyCart)

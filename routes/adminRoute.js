@@ -15,5 +15,7 @@ router.post('/product/delete/:id', verifyAdminToken(ADMIN_TOKEN_SECRET), Control
 router.get('/products', verifyAdminToken(ADMIN_TOKEN_SECRET), Controller.getProducts)
 
 router.get('/comment/:id', verifyAdminToken(ADMIN_TOKEN_SECRET), Controller.getCommentsByProduct)
+router.get('/comments', verifyAdminToken(ADMIN_TOKEN_SECRET), Controller.getComments)
 
+router.get('/histories', verifyAdminToken(ADMIN_TOKEN_SECRET), Controller.getHistories)
 module.exports = router

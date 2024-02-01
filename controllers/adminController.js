@@ -1,6 +1,7 @@
 const User = require('../models/userModel')
 const Comment = require('../models/commentModel')
 const Product = require('../models/productModel')
+const History = require('../models/historyModel')
 
 exports.getUsers = async (req, res) => {
     try {
@@ -88,11 +89,29 @@ exports.updateProductById = async (req, res) => {
     }
 }
 
+exports.getComments = async (req, res) => {
+    try {
+        const comments = await Comment.find()
+        res.json({comments})
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 exports.getCommentsByProduct = async (req, res) => {
     try {
         const productId = req.params.id
         const comments = await Comment.find({productId: productId}, {__v: 0})
         res.json({comments})
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+exports.getHistories = async (req, res) => {
+    try {
+        const histories = await History.find()
+        res.json({histories})
     } catch (err) {
         console.log(err)
     }

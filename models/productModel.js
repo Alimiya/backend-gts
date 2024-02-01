@@ -12,9 +12,17 @@ const productSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'HistoryModel'
     }],
-    commentId:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'CommentModel'
+    commentId: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CommentModel"
+    }],
+    subcommentId: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "SubcommentModel"
+    }],
+    like: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'LikeModel'
     }]
 })
 

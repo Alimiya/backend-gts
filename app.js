@@ -28,6 +28,7 @@ const commentRoute = require('./routes/commentRoute')
 const productRoute = require('./routes/productRoute')
 const profileRoute = require('./routes/profileRoute')
 const subcommentRoute = require('./routes/subcommentRoute')
+const likeRoute = require('./routes/likeRoute')
 
 app.use('/api/admin', adminRoute)
 app.use('/api/auth', authRoute)
@@ -36,6 +37,7 @@ app.use('/api/comment', commentRoute)
 app.use('/api/product', productRoute)
 app.use('/api/profile', profileRoute)
 app.use('/api/subcomment', subcommentRoute)
+app.use('/api/like', likeRoute)
 
 
 const start = async () => {

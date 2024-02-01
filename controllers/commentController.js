@@ -1,5 +1,6 @@
 const Product = require('../models/productModel')
 const Comment = require('../models/commentModel')
+const User = require('../models/userModel')
 
 exports.addComment = async (req, res) => {
     const {commentText, rating} = req.body
@@ -21,9 +22,14 @@ exports.addComment = async (req, res) => {
 
     try {
         await comment.save()
-        product.comments.push(comment._id)
+        product.commentId.push(comment._id)
         await product.save()
-        res.json({comment, product})
+        const user = await User.findById(userId)
+        if (user) {
+            user.commentId.push(comment._id)
+            await user.save()
+        }
+        res.json({comment, product, user})
     } catch (err) {
         console.log(err)
     }
@@ -34,10 +40,16 @@ exports.updateComment = async (req, res) => {
     const userId = req.user._id
     const productId = req.params.id
     const commentId = req.params.commentId
+
     try {
+        const comment = await Comment.findById(commentId)
+
+        if (!comment) return res.json({ message: 'Comment not found' })
+
+        if (!comment.userId || !userId || comment.userId.toString() !== userId.toString()) return res.json({ message: 'Not same user' })
+
         const updatedComment = await Comment.findByIdAndUpdate(commentId, {comment: commentText, rating}, {new: true})
-        if (!updatedComment) return res.status(404).json({error: 'Comment not found'})
-        if (updatedComment.userId.toString() !== user.toString()) return res.json({error: 'Not same user'})
+
         res.json({updatedComment})
     } catch (err) {
         console.log(err)

@@ -1,9 +1,7 @@
 const mongoose = require('mongoose')
 
-const subcommentSchema = new mongoose.Schema({
-    subcomment: {
-        type: String
-    },
+const likeSchema = new mongoose.Schema({
+    like:{type:Boolean, required:true},
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'UserModel'
@@ -16,12 +14,12 @@ const subcommentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'CommentModel'
     },
-    like: [{
+    subcommentId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'LikeModel'
-    }]
+        ref: 'SubcommentModel'
+    },
 })
 
-const SubcommentModel = mongoose.model('SubcommentModel', subcommentSchema)
+const LikeModel = mongoose.model('LikeModel', likeSchema)
 
-module.exports = SubcommentModel
+module.exports = LikeModel
