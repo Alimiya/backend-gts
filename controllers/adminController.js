@@ -61,7 +61,7 @@ exports.createProduct = async (req, res) => {
     })
     try {
         await newProduct.save()
-        res.json({newProduct})
+        res.redirect('/admin')
     } catch (err) {
         console.log(err)
     }
@@ -71,7 +71,7 @@ exports.deleteProductById = async (req, res) => {
     const productId = req.params.id
     try {
         const product = await Product.findByIdAndDelete(productId)
-        res.json({message: 'Product deleted'})
+        res.redirect('/admin')
     } catch (err) {
         console.log(err)
     }
@@ -83,7 +83,7 @@ exports.updateProductById = async (req, res) => {
     try {
         const product = await Product.findByIdAndUpdate(productId, {title, description, category, quantity, price})
         console.log(product)
-        res.json({product})
+        res.redirect('/admin')
     } catch (err) {
         console.log(err)
     }

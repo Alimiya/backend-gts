@@ -6,9 +6,17 @@ const User = require('../models/userModel')
 exports.getCartById = async (req, res) => {
     try {
         const userId = req.user._id
-        console.log(userId)
-        const cart = await Cart.findOne({userId: userId}, {__v: 0})
+        const cart = await Cart.findOne({userId: userId}, {productId:1}).populate('productId')
         res.json({cart})
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+exports.getUserId = async (req, res) => {
+    try {
+        const userId = req.user._id
+        return res.json({userId})
     } catch (err) {
         console.log(err)
     }
@@ -27,7 +35,6 @@ exports.addToCart = async (req, res) => {
             {$push: {productId: productId}},
             {upsert: true, new: true}
         )
-        res.json({updatedCart})
     } catch (err) {
         console.log(err)
     }
@@ -44,7 +51,7 @@ exports.removeFromCart = async (req, res) => {
             {$pull: {productId: productId}},
             {new: true}
         )
-        res.json({cart})
+        res.redirect(`/cart/${productId}`)
     } catch (err) {
         console.log(err)
     }
@@ -53,7 +60,7 @@ exports.removeFromCart = async (req, res) => {
 exports.buyCart = async (req, res) => {
     const {quantity} = req.body
     const userId = req.user._id
-    const cart = await Cart.findOne({userId: userId})
+    const cart = await Cart.findOne({userId: userId}).populate('productId')
 
     if (!cart || !cart.productId.length) return res.status(400).json({message: "Cart is empty"})
 
@@ -67,9 +74,7 @@ exports.buyCart = async (req, res) => {
         const purchasedProduct = quantity
         if (purchasedProduct > product.quantity) return res.json({message: "Too many quantity for product"})
 
-        console.log(purchasedProduct)
         product.quantity -= purchasedProduct
-        console.log(product)
         await product.save()
 
         history.push({
@@ -81,7 +86,7 @@ exports.buyCart = async (req, res) => {
         const newHistory = await History.insertMany(history)
         await User.findOneAndUpdate({ _id: userId }, { $push: { historyId: { $each: newHistory.map(history => history._id) } } });
         await Cart.findOneAndUpdate({userId: userId}, {$set: {productId: []}})
-        res.json({newHistory})
+        res.redirect('/profile')
     } catch (err) {
         console.log(err)
     }

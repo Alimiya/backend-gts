@@ -18,4 +18,5 @@ router.get('/comment/:id', verifyAdminToken(ADMIN_TOKEN_SECRET), Controller.getC
 router.get('/comments', verifyAdminToken(ADMIN_TOKEN_SECRET), Controller.getComments)
 
 router.get('/histories', verifyAdminToken(ADMIN_TOKEN_SECRET), Controller.getHistories)
+
 module.exports = router

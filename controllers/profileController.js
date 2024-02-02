@@ -14,7 +14,7 @@ exports.updateProfile = async (req, res) => {
             {name, surname, address, phone, password: hashedPassword},
             {new: true}
         )
-        res.json({updateUser})
+        res.redirect('/profile')
     } catch (err) {
         console.log(err)
     }
@@ -32,8 +32,24 @@ exports.updateAvatar = async (req, res) => {
             userId,
             {avatar: image})
         await updateUser.save()
-        res.json({updateUser})
+        res.redirect('/profile')
     } catch (err) {
         console.log(err)
     }
+}
+
+exports.getUserById = async (req, res) => {
+    const userId = req.user._id
+    const user = await User.findOne({_id: userId}, {
+        name: 1,
+        surname: 1,
+        phone: 1,
+        address: 1,
+        historyId: 1,
+        avatar:1
+    }).populate({
+        path: 'historyId',
+        populate: { path: 'productId' }
+    })
+    res.json({user})
 }

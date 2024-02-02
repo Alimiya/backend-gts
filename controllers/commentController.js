@@ -29,7 +29,7 @@ exports.addComment = async (req, res) => {
             user.commentId.push(comment._id)
             await user.save()
         }
-        res.json({comment, product, user})
+        res.redirect(`/product/${productId}`)
     } catch (err) {
         console.log(err)
     }
@@ -50,7 +50,7 @@ exports.updateComment = async (req, res) => {
 
         const updatedComment = await Comment.findByIdAndUpdate(commentId, {comment: commentText, rating}, {new: true})
 
-        res.json({updatedComment})
+        res.redirect(`/product/${productId}`)
     } catch (err) {
         console.log(err)
     }

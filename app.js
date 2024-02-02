@@ -8,6 +8,8 @@ require("dotenv").config({path: "config/.env"})
 
 const app = express()
 
+app.set('view engine', 'ejs')
+app.use(express.static(__dirname + "/public"))
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -29,6 +31,7 @@ const productRoute = require('./routes/productRoute')
 const profileRoute = require('./routes/profileRoute')
 const subcommentRoute = require('./routes/subcommentRoute')
 const likeRoute = require('./routes/likeRoute')
+const renderRoute = require('./routes/renderRoute')
 
 app.use('/api/admin', adminRoute)
 app.use('/api/auth', authRoute)
@@ -38,7 +41,7 @@ app.use('/api/product', productRoute)
 app.use('/api/profile', profileRoute)
 app.use('/api/subcomment', subcommentRoute)
 app.use('/api/like', likeRoute)
-
+app.use(renderRoute)
 
 const start = async () => {
     try {

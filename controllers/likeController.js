@@ -57,8 +57,6 @@ exports.isLike = async (req, res) => {
         await User.findByIdAndUpdate(userId, {$addToSet: {like: like._id}})
         await Product.findByIdAndUpdate(productId, {$addToSet: {like: like._id}})
         await Comment.findByIdAndUpdate(commentId, {$addToSet: {like: like._id}})
-
-        res.json({like})
     } catch (err) {
         console.log(err)
     }
@@ -123,8 +121,6 @@ exports.isLikeSubcomment = async (req, res) => {
         await Product.findByIdAndUpdate(productId, {$addToSet: {like: like._id}})
         await Comment.findByIdAndUpdate(commentId, {$addToSet: {like: like._id}})
         await Subcomment.findByIdAndUpdate(subcommentId, {$addToSet: {like: like._id}})
-
-        res.json({like})
     } catch (err) {
         console.log(err)
     }

@@ -23,7 +23,7 @@ exports.register = async (req, res) => {
         await user.save()
         const cart = new Cart({user: user._id, productId: []})
         await cart.save()
-        res.json({user, cart})
+        res.redirect('/auth/login')
     } catch (err) {
         res.json(err)
     }
@@ -41,7 +41,7 @@ exports.login = async (req, res) => {
         const token = user.role === 'Admin' ? generateAdminToken(user) : generateUserToken(user)
         res.cookie(user.role, token, {maxAge: process.env.TOKEN_EXPIRE * 100000})
         res.header('Authorization', `Bearer ${token}`)
-        res.json({token})
+        res.redirect('/product')
     } catch (err) {
         console.log(err)
     }
@@ -50,7 +50,7 @@ exports.logout = async (req, res) => {
     try {
         res.clearCookie('Admin')
         res.clearCookie('User')
-        res.json({message: 'Clear'})
+        res.redirect('/')
     } catch (err) {
         console.log(err)
     }

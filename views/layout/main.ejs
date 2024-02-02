@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+<%- include('../components/header') %>
+<section>
+    <div class="container">
+        <div class="row d-flex justify-content-center align-items-center h-100" style="margin-top: 5%" id="productContainer">
+
+        </div>
+    </div>
+</section>
+<%- include('../components/footer') %>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    axios.get('http://localhost:3000/api/product')
+        .then(response => {
+            const products = response.data.products
+            const productContainer = document.getElementById('productContainer')
+
+            products.forEach(product => {
+                const card = document.createElement('div')
+                card.classList.add('col-md-4', 'mb-4')
+                card.innerHTML = `
+                    <div class="card">
+                        <img src="${product.file[0]}" class="card-img-top" alt="Product Image" style="height: 200px object-fit: cover">
+                        <div class="card-body">
+                            <h5 class="card-title">${product.title}</h5>
+                            <p class="card-text">${product.description}</p>
+                            <p class="card-text"><strong>Category:</strong> ${product.category}</p>
+                            <p class="card-text"><strong>Quantity:</strong> ${product.quantity}</p>
+                            <p class="card-text"><strong>Price:</strong> ${product.price}</p>
+                            <div class="text-center">
+                                <form action="/api/cart/add/${product._id}" method="POST">
+                                    <button type="submit" class="btn btn-success">Add to Cart</button>
+                                </form>
+                                <button type="button" class="btn btn-warning mb-1" onclick="window.location.href='/product/info/${product._id}'">
+                                    About
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `
+                productContainer.appendChild(card)
+            })
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error)
+        })
+</script>
+</body>
+</html>

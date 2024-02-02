@@ -41,7 +41,7 @@ exports.addSubcomment = async (req, res) => {
         await user.save()
         await comment.save()
 
-        res.json({subcomment, comment, user})
+        res.redirect(`/product/${productId}`)
     } catch (err) {
         console.log(err)
     }
