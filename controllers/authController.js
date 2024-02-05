@@ -21,7 +21,7 @@ exports.register = async (req, res) => {
     })
     try {
         await user.save()
-        const cart = new Cart({user: user._id, productId: []})
+        let cart = new Cart({user: user._id, productId: []})
         await cart.save()
         res.redirect('/auth/login')
     } catch (err) {
@@ -41,7 +41,8 @@ exports.login = async (req, res) => {
         const token = user.role === 'Admin' ? generateAdminToken(user) : generateUserToken(user)
         res.cookie(user.role, token, {maxAge: process.env.TOKEN_EXPIRE * 100000})
         res.header('Authorization', `Bearer ${token}`)
-        res.redirect('/product')
+        if(user.role === 'Admin') return res.redirect('/admin')
+        if(user.role === 'User') return res.redirect('/product')
     } catch (err) {
         console.log(err)
     }

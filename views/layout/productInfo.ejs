@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+</head>
+<body class="text-center">
+<header>
+    <div id="headerContainer"></div>
+</header>
+<section class="vh-100">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100" style="margin-top: 2%">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-10">
+                <div class="card shadow-2-strong" style="border-radius: 3rem">
+                    <div class="card-body p-5">
+                        <h3 class="mb-5 text-lg-start" id="name"></h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner" id="carouselInner"></div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel"
+                                            data-bs-slide="prev" style="top: 50% transform: translateY(-50%)">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel"
+                                            data-bs-slide="next" style="top: 50% transform: translateY(-50%)">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-start">
+                                <h5 id="description"></h5>
+                                <h5 id="category"></h5>
+                                <h5 id="quantity"></h5>
+                                <h5 id="price"></h5>
+                                <button type="submit" class="w-50 btn btn-lg btn-warning" id="commentButton" title="Buy before comment product">
+                                    Comment
+                                </button>
+                                <button type="submit" class="w-50 mt-2 btn btn-lg btn-primary" id="backButton">
+                                    Back
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h4>Comments:</h4>
+            <div id="commentsContainer" class="mb-5"></div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div id="footerContainer"></div>
+</footer>
+<script>
+    async function getProductData() {
+        try {
+            const productId = window.location.pathname.split('/').pop()
+            const response = await axios.get(`http://localhost:3000/api/product/${productId}`)
+            const productData = response.data.product
+            const historyId = productData.historyId
+
+            const productIds = []
+
+            historyId.forEach(history => {
+                productIds.push(history.productId[0])
+            })
+
+            const hasPurchased = productIds.includes(productId)
+            const commentButton = document.getElementById('commentButton')
+            commentButton.disabled = !hasPurchased
+
+            document.getElementById('name').innerText = 'Title: ' + productData.title
+
+            const carouselInner = document.getElementById('carouselInner')
+            productData.file.forEach((image, index) => {
+                const isActive = index === 0 ? 'active' : ''
+                const item = document.createElement('div')
+                item.className = `carousel-item ${isActive}`
+                item.innerHTML = `<img src="${image}" class="d-block mx-auto" style="max-height: 300px" alt="Image ${index + 1}">`
+                carouselInner.appendChild(item)
+            })
+
+            document.getElementById('description').innerText = 'Description: ' + productData.description
+            document.getElementById('category').innerText = 'Category: ' + productData.category
+            document.getElementById('quantity').innerText = 'Quantity: ' + productData.quantity
+            document.getElementById('price').innerText = `Price: ${productData.price}`
+
+            new bootstrap.Carousel(document.getElementById('imageCarousel'))
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async function getCommentData() {
+        try {
+            const productId = window.location.pathname.split('/').pop()
+            const response = await axios.get(`http://localhost:3000/api/comment/${productId}`)
+            const comments = response.data.comments
+
+            if (!comments || !Array.isArray(comments)) {
+                console.error('Comments data is not valid')
+                return
+            }
+
+            const commentsContainer = document.getElementById('commentsContainer')
+            commentsContainer.innerHTML = ''
+
+            for (const comment of comments) {
+                const commentElement = document.createElement('div')
+                commentElement.className = 'comment-container border p-1 mb-3'
+                commentElement.innerHTML = `
+                <p><strong>${comment.userId.username}</strong></p>
+                <p>${comment.comment}</p>
+                <p>Rating: ${comment.rating}</p>
+                <h5>Comments:</h5>
+                <div id="subcomments_${comment._id}"></div>
+                    <button type="button" class="btn btn-primary" onclick="window.location.href='/product/info/${comment.productId}/comment/update/${comment._id}'">Update</button>
+                <div class="dynamic-comment">
+                    <button type="button" class="btn btn-primary" onclick="toggleCommentForm('${comment._id}')">Add Comment</button>
+                    <div id="commentForm_${comment._id}" style="display: none">
+                        <form action="/api/subcomment/add/product/${comment.productId}/comment/${comment._id}" method="post">
+                            <textarea class="form-control mt-2" rows="3" placeholder="Write your comment..." id="subcommentText" name="subcommentText"></textarea>
+                            <button type="submit" class="w-50 mt-2 btn btn-lg btn-primary">Submit Comment</button>
+                        </form>
+                    </div>
+                </div>
+            `
+                commentsContainer.appendChild(commentElement)
+
+
+                const subcommentsContainer = document.getElementById(`subcomments_${comment._id}`)
+                subcommentsContainer.innerHTML = ''
+                for (const subcommentId of comment.subcommentId) {
+                    const subcommentElement = document.createElement('div')
+                    subcommentElement.innerHTML = `<p>${subcommentId.userId.username}:${subcommentId.subcomment}</p>`
+                    subcommentsContainer.appendChild(subcommentElement)
+                }
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+
+    function toggleCommentForm(commentId) {
+        const commentForm = document.getElementById(`commentForm_${commentId}`)
+        commentForm.style.display = commentForm.style.display === 'none' ? 'block' : 'none'
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        getProductData()
+        getCommentData()
+        const productId = window.location.pathname.split('/').pop()
+        const commentButton = document.getElementById('commentButton')
+        const backButton = document.getElementById('backButton')
+        commentButton.addEventListener('click', function() {
+            window.location.href = `/product/info/${productId}/comment/add`
+        })
+        backButton.addEventListener('click', function() {
+            window.location.href = `/product`
+        })
+
+    })
+</script>
+</body>
+</html>

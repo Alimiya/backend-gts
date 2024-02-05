@@ -27,7 +27,6 @@ exports.addSubcomment = async (req, res) => {
         await subcomment.save()
 
         const user = await User.findById(userId).populate('historyId')
-        console.log(user)
         if (!user) return res.json({error: 'Not same user'})
 
         const productInHistory = user.historyId.some(History => History.productId.toString() === productId)
@@ -41,7 +40,7 @@ exports.addSubcomment = async (req, res) => {
         await user.save()
         await comment.save()
 
-        res.redirect(`/product/${productId}`)
+        res.redirect(`/product/info/${productId}`)
     } catch (err) {
         console.log(err)
     }

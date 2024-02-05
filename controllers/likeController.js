@@ -17,7 +17,7 @@ exports.isLike = async (req, res) => {
         const product = await Product.findById(productId)
         if (!product) return res.json({message: 'Product not found'})
         const productInHistory = user.historyId.some(history => history.productId.includes(productId))
-        if (!productInHistory) return res.json({ message: 'Product not found in user history' })
+        if (!productInHistory) return res.json({message: 'Product not found in user history'})
 
 
         if (commentId) {
@@ -35,7 +35,7 @@ exports.isLike = async (req, res) => {
                 commentId,
             })
         } else {
-                like.like = isLike
+            like.like = isLike
         }
 
         await like.save()
@@ -57,6 +57,7 @@ exports.isLike = async (req, res) => {
         await User.findByIdAndUpdate(userId, {$addToSet: {like: like._id}})
         await Product.findByIdAndUpdate(productId, {$addToSet: {like: like._id}})
         await Comment.findByIdAndUpdate(commentId, {$addToSet: {like: like._id}})
+        res.redirect(`/product/info/${productId}`)
     } catch (err) {
         console.log(err)
     }
@@ -75,7 +76,7 @@ exports.isLikeSubcomment = async (req, res) => {
         const product = await Product.findById(productId)
         if (!product) return res.json({message: 'Product not found'})
         const productInHistory = user.historyId.some(history => history.productId.includes(productId))
-        if (!productInHistory) return res.json({ message: 'Product not found in user history' })
+        if (!productInHistory) return res.json({message: 'Product not found in user history'})
 
         if (commentId) {
             const comment = await Comment.findById(commentId)
@@ -98,7 +99,7 @@ exports.isLikeSubcomment = async (req, res) => {
                 subcommentId
             })
         } else {
-                like.like = isLike
+            like.like = isLike
         }
 
         await like.save()
@@ -121,6 +122,36 @@ exports.isLikeSubcomment = async (req, res) => {
         await Product.findByIdAndUpdate(productId, {$addToSet: {like: like._id}})
         await Comment.findByIdAndUpdate(commentId, {$addToSet: {like: like._id}})
         await Subcomment.findByIdAndUpdate(subcommentId, {$addToSet: {like: like._id}})
+        res.redirect(`/product/info/${productId}`)
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+exports.getCommentCount = async (req, res) => {
+    try {
+        const productId = req.params.id
+        const commentId = req.params.commentId
+
+        const likes = await Like.countDocuments({like:true})
+        const dislikes = await Like.countDocuments({like:false})
+
+        return res.json({likes, dislikes})
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+exports.getSubcommentCount = async (req, res) => {
+    try {
+        const productId = req.params.id
+        const commentId = req.params.commentId
+        const subcommentId = req.params.subcommentId
+
+        const likes = await Like.countDocuments({like:true})
+        const dislikes = await Like.countDocuments({like:false})
+
+        return res.json({likes, dislikes})
     } catch (err) {
         console.log(err)
     }

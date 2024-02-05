@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<section>
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="productTableBody">
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const response = await fetch('http://localhost:3000/api/admin/products')
+            const data = await response.json()
+            const products = data.products
+
+            const productTableBody = document.getElementById('productTableBody')
+
+            products.forEach(product => {
+                const row = document.createElement('tr')
+
+                const imageCell = document.createElement('td')
+                const image = document.createElement('img')
+                image.src = product.file[0]
+                image.style.width = '100px'
+                image.style.height = 'auto'
+                image.alt = product.title
+                imageCell.appendChild(image)
+
+                const titleCell = document.createElement('td')
+                titleCell.textContent = product.title
+
+                const descriptionCell = document.createElement('td')
+                descriptionCell.textContent = product.description
+
+                const categoryCell = document.createElement('td')
+                categoryCell.textContent = product.category
+
+                const priceCell = document.createElement('td')
+                priceCell.textContent = product.price
+
+                const quantityCell = document.createElement('td')
+                quantityCell.textContent = product.quantity
+
+                const actionsCell = document.createElement('td')
+
+                const aboutButton = document.createElement('button')
+                aboutButton.classList.add('btn', 'btn-warning', 'mb-1')
+                aboutButton.textContent = 'About'
+                aboutButton.addEventListener('click', () => {
+                    window.location.href = `/product/info/${product._id}`
+                })
+
+                const updateButton = document.createElement('button')
+                updateButton.classList.add('btn', 'btn-warning', 'mb-1')
+                updateButton.textContent = 'Update'
+                updateButton.addEventListener('click', () => {
+                    window.location.href = `/admin/product/update/${product._id}`
+                })
+
+                const deleteForm = document.createElement('form')
+                deleteForm.action = `/api/admin/product/delete/${product._id}`
+                deleteForm.method = 'POST'
+                deleteForm.style.display = 'inline-block'
+
+                const deleteButton = document.createElement('button')
+                deleteButton.type = 'submit'
+                deleteButton.classList.add('btn', 'btn-danger')
+                deleteButton.textContent = 'Delete'
+
+                deleteForm.appendChild(deleteButton)
+                actionsCell.appendChild(aboutButton)
+                actionsCell.appendChild(updateButton)
+                actionsCell.appendChild(deleteForm)
+
+                row.appendChild(imageCell)
+                row.appendChild(titleCell)
+                row.appendChild(descriptionCell)
+                row.appendChild(categoryCell)
+                row.appendChild(priceCell)
+                row.appendChild(quantityCell)
+                row.appendChild(actionsCell)
+
+                productTableBody.appendChild(row)
+            })
+        } catch (error) {
+            console.error('Error fetching data:', error)
+        }
+    })
+</script>
+</body>
+</html>

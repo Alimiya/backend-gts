@@ -28,6 +28,8 @@ exports.getProductById = async (req, res) => {
             price: 1,
             date: 1,
             file: 1
+        }).populate({
+            path:'historyId'
         })
         res.json({product})
     } catch (err) {

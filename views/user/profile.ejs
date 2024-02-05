@@ -7,23 +7,40 @@
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
+<style>
+    .user-photo-container {
+        position: relative;
+        height: 0;
+        padding-top: 100%;
+    }
+
+    .user-photo {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
 <body>
-<header>
-    <!-- Header content here -->
-</header>
 
 <section class="container mt-5">
     <div class="row">
         <div class="col-md-4">
             <div class="card mb-3">
-                <img src="user_photo.jpg" class="card-img-top" alt="User Photo">
-                <div class="card-body">
-                    <button type="button" class="btn btn-primary">Update Photo</button>
-                    <button type="button" class="btn btn-danger">Delete Photo</button>
+                <div class="user-photo-container">
+                    <img src="user_photo.jpg" class="user-photo" alt="User Photo">
+                </div>
+                <div class="card-body justify-content-center text-center">
+                    <button type="button" class="btn btn-primary" id="updatePhoto">Update Photo</button>
+                    <form id="deleteButton">
+                    <button type="submit" class="btn btn-danger">Delete Photo</button>
+                    </form>
                 </div>
             </div>
 
-            <button type="button" class="btn btn-primary">Update Profile</button>
+            <button type="button" class="btn btn-primary" id="updateProfile">Update Profile</button>
         </div>
         <div class="col-md-8">
             <div class="container">
@@ -42,16 +59,12 @@
     </div>
 </section>
 
-<footer>
-</footer>
-
 <script>
     async function getUserData(){
         try {
-            const response = await axios.get(`http://localhost:3000/api/profile`)
+            const response = await axios.get(`http://localhost:3000/api/profile/65b9c390adf6ffe54b01abf0`)
             const userData = response.data.user
 
-            // Populate user data
             const userDataContainer = document.getElementById('userDataContainer')
             userDataContainer.innerHTML = `
                 <div class="row mb-3">
@@ -73,23 +86,49 @@
                     </div>
                 </div>
             `
+            const updateProfile = document.getElementById('updateProfile')
+            updateProfile.addEventListener('click', () => {
+                window.location.href = `/profile/update/${userData._id}`
+            })
+
+            const updatePhoto = document.getElementById('updatePhoto')
+            updatePhoto.addEventListener('click', () => {
+                window.location.href = `/profile/avatar/update/${userData._id}`
+            })
+
+            const deleteButton = document.getElementById('deleteButton')
+            deleteButton.action = `/api/profile/avatar/delete/${userData._id}`
+            deleteButton.method = 'POST'
+
+            const userPhoto = userData.avatar ? userData.avatar : 'user_photo.jpg'
+            const userPhotoSrc = userPhoto.startsWith('data:image') ? userPhoto : `http://localhost:3000/${userPhoto}`
+
+            const userPhotoElement = document.createElement('img')
+            userPhotoElement.src = userPhotoSrc
+            userPhotoElement.classList.add('user-photo')
+            userPhotoElement.alt = 'User Photo'
+
+            const userPhotoContainer = document.querySelector('.user-photo-container')
+            userPhotoContainer.innerHTML = ''
+            userPhotoContainer.appendChild(userPhotoElement)
 
             const purchaseHistory = userData.historyId
-            console.log(purchaseHistory)
             const purchaseHistoryContainer = document.getElementById('purchaseHistory')
             purchaseHistoryContainer.innerHTML = ''
             purchaseHistory.forEach(item => {
-                const product = item.productId
-                console.log(product)
-                const li = document.createElement('li')
-                li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center')
-                const title = item.productId && item.productId.title ? item.productId.title : "Unknown Product"
-                li.innerHTML = `
-                    ${title}
-                    <span class="badge bg-primary rounded-pill">Quantity: ${item.quantity}</span>
-                    <span class="badge bg-secondary rounded-pill">Date: ${item.createdAt}</span>
-                `
-                purchaseHistoryContainer.appendChild(li)
+                item.productId.forEach(product => {
+                    const li = document.createElement('li')
+                    li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center')
+
+                    const title = product.title ? product.title : "Unknown Product"
+                    li.innerHTML = `
+                        ${title}
+                        <span class="badge bg-primary rounded-pill">Quantity: ${item.quantity}</span>
+                        <span class="badge bg-secondary rounded-pill">Date: ${item.createdAt}</span>
+                    `
+
+                    purchaseHistoryContainer.appendChild(li)
+                })
             })
         } catch (err) {
             console.log(err)

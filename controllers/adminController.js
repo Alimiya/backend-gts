@@ -5,7 +5,20 @@ const History = require('../models/historyModel')
 
 exports.getUsers = async (req, res) => {
     try {
-        const users = await User.find({})
+        const users = await User.find({}).populate([
+            {
+                path:'historyId'
+            },
+            {
+                path:'commentId'
+            },
+            {
+                path:'subcommentId'
+            },
+            {
+                path:'like'
+            }
+        ])
         res.json({users})
     } catch (err) {
         console.log(err)
@@ -44,6 +57,7 @@ exports.getProductById = async (req, res) => {
 exports.createProduct = async (req, res) => {
     const {title, description, category, quantity, price} = req.body
     const files = req.files
+    console.log(files)
 
     if (!files || files.length === 0) return res.json({message: 'No files'})
 

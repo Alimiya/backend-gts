@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+</head>
+<body class="text-center">
+<section class="vh-100">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                    <form method="post" class="card-body p-5 text-center" id="formContainer">
+                        <h3 class="mb-5">Update Product</h3>
+                        <div class="form-floating mb-4">
+                            <input type="text" id="title" name="title" class="form-control" required/>
+                            <label class="form-label" for="title">Title</label>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input type="text" id="description" name="description" class="form-control" required/>
+                            <label class="form-label" for="description">Description</label>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input type="text" id="category" name="category" class="form-control" required/>
+                            <label class="form-label" for="category">Category</label>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input type="number" id="price" name="price" class="form-control" required/>
+                            <label class="form-label" for="price">Price</label>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input type="number" id="quantity" name="quantity" class="form-control" required/>
+                            <label class="form-label" for="quantity">Quantity</label>
+                        </div>
+
+                        <button type="submit" class="w-100 btn btn-lg btn-primary mb-2">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    function extractIdsFromUrl(url) {
+        const segments = url.split("/")
+        const productId = segments[6]
+        console.log(productId)
+        return { productId}
+    }
+
+    const url = window.location.href
+    const { productId} = extractIdsFromUrl(url)
+
+    const formContainer = document.getElementById('formContainer')
+    formContainer.action = `/api/admin/product/update/${productId}`
+</script>
+</body>
+</html>
