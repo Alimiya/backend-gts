@@ -130,11 +130,21 @@
                 <p><strong>${comment.userId.username}</strong></p>
                 <p>${comment.comment}</p>
                 <p>Rating: ${comment.rating}</p>
+                <div>
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="likeComment('${comment._id}')">
+                        <i class="bi bi-hand-thumbs-up"></i> Like
+                    </button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="dislikeComment('${comment._id}')">
+                        <i class="bi bi-hand-thumbs-down"></i> Dislike
+                    </button>
+                    <div id="likesDislikes_${comment._id}"></div>
+                </div>
                 <h5>Comments:</h5>
                 <div id="subcomments_${comment._id}"></div>
-                    <button type="button" class="btn btn-primary" onclick="window.location.href='/product/info/${comment.productId}/comment/update/${comment._id}'">Update</button>
+
+                    <button type="button" class="btn btn-primary col-4 " onclick="window.location.href='/product/info/${comment.productId}/comment/update/${comment._id}'">Update</button>
                 <div class="dynamic-comment">
-                    <button type="button" class="btn btn-primary" onclick="toggleCommentForm('${comment._id}')">Add Comment</button>
+                    <button type="button" class="btn btn-primary col-4" onclick="toggleCommentForm('${comment._id}')">Add Comment</button>
                     <div id="commentForm_${comment._id}" style="display: none">
                         <form action="/api/subcomment/add/product/${comment.productId}/comment/${comment._id}" method="post">
                             <textarea class="form-control mt-2" rows="3" placeholder="Write your comment..." id="subcommentText" name="subcommentText"></textarea>
@@ -150,9 +160,22 @@
                 subcommentsContainer.innerHTML = ''
                 for (const subcommentId of comment.subcommentId) {
                     const subcommentElement = document.createElement('div')
-                    subcommentElement.innerHTML = `<p>${subcommentId.userId.username}:${subcommentId.subcomment}</p>`
+                    subcommentElement.className = 'subcomment-container border p-1 mb-2'
+                    subcommentElement.innerHTML = `
+        <p><strong>${subcommentId.userId.username}</strong>: ${subcommentId.subcomment}</p>
+        <div>
+            <button type="button" class="btn btn-outline-primary btn-sm" onclick="likeSubcomment('${comment._id}','${subcommentId._id}')">
+                <i class="bi bi-hand-thumbs-up"></i> Like
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="dislikeSubcomment('${comment._id}','${subcommentId._id}')">
+                <i class="bi bi-hand-thumbs-down"></i> Dislike
+            </button>
+        <div id="likesDislikes_${subcommentId._id}"></div>
+        </div>
+    `
                     subcommentsContainer.appendChild(subcommentElement)
                 }
+
             }
         } catch (error) {
             console.error(error)
@@ -163,6 +186,91 @@
     function toggleCommentForm(commentId) {
         const commentForm = document.getElementById(`commentForm_${commentId}`)
         commentForm.style.display = commentForm.style.display === 'none' ? 'block' : 'none'
+    }
+
+    async function updateLikeDislike(commentId) {
+        try {
+            const url = window.location.href
+            const segments = url.split("/")
+            const productId = segments[5]
+            const likesDislikesContainer = document.getElementById(`likesDislikes_${commentId}`)
+            const response = await axios.get(`/api/like/product/${productId}/comment/${commentId}/count`)
+            likesDislikesContainer.innerHTML = `
+            <p>Likes: ${response.data.likes}</p>
+            <p>Dislikes: ${response.data.dislikes}</p>
+        `
+        } catch (error) {
+            console.error('Error updating likes/dislikes:', error)
+        }
+    }
+
+    async function updateLikesDislikes(commentId, subcommentId) {
+        try {
+            const url = window.location.href
+            const segments = url.split("/")
+            const productId = segments[5]
+            const response = await axios.get(`/api/like/product/${productId}/comment/${commentId}/subcomment/${subcommentId}/count`)
+            const likesDislikesContainer = document.getElementById(`likesDislikes_${subcommentId}`)
+            likesDislikesContainer.innerHTML = `
+            <p>Likes: ${response.data.likes}</p>
+            <p>Dislikes: ${response.data.dislikes}</p>
+        `
+        } catch (error) {
+            console.error('Error updating likes/dislikes:', error)
+        }
+    }
+
+    async function likeComment(commentId) {
+        try {
+                const url = window.location.href
+                const segments = url.split("/")
+                const productId = segments[5]
+
+            const response = await axios.post(`/api/like/product/${productId}/comment/${commentId}`, { isLike: true })
+            await updateLikeDislike(commentId)
+
+        } catch (error) {
+            console.error('Error liking comment:', error)
+        }
+    }
+
+    async function dislikeComment(commentId) {
+        try {
+            const url = window.location.href
+            const segments = url.split("/")
+            const productId = segments[5]
+            const response = await axios.post(`/api/like/product/${productId}/comment/${commentId}`, { isLike: false })
+            await updateLikeDislike(commentId)
+
+        } catch (error) {
+            console.error('Error disliking comment:', error)
+        }
+    }
+
+    async function likeSubcomment(commentId, subcommentId) {
+        try {
+            const url = window.location.href
+            const segments = url.split("/")
+            const productId = segments[5]
+            const response = await axios.post(`/api/like/product/${productId}/comment/${commentId}/subcomment/${subcommentId}`, { isLike: true })
+            await updateLikesDislikes(commentId, subcommentId)
+            console.log(commentId)
+            console.log(subcommentId)
+        } catch (error) {
+            console.error('Error liking comment:', error)
+        }
+    }
+
+    async function dislikeSubcomment(commentId, subcommentId) {
+        try {
+            const url = window.location.href
+            const segments = url.split("/")
+            const productId = segments[5]
+            const response = await axios.post(`/api/like/product/${productId}/comment/${commentId}/subcomment/${subcommentId}`, { isLike: false })
+            await updateLikesDislikes(commentId, subcommentId)
+        } catch (error) {
+            console.error('Error disliking comment:', error)
+        }
     }
 
     document.addEventListener('DOMContentLoaded', () => {

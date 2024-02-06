@@ -133,8 +133,8 @@ exports.getCommentCount = async (req, res) => {
         const productId = req.params.id
         const commentId = req.params.commentId
 
-        const likes = await Like.countDocuments({like:true})
-        const dislikes = await Like.countDocuments({like:false})
+        const likes = await Like.countDocuments({commentId: commentId, subcommentId: { $exists: false }, like:true})
+        const dislikes = await Like.countDocuments({commentId: commentId, subcommentId: { $exists: false }, like:false})
 
         return res.json({likes, dislikes})
     } catch (err) {
@@ -148,8 +148,8 @@ exports.getSubcommentCount = async (req, res) => {
         const commentId = req.params.commentId
         const subcommentId = req.params.subcommentId
 
-        const likes = await Like.countDocuments({like:true})
-        const dislikes = await Like.countDocuments({like:false})
+        const likes = await Like.countDocuments({commentId: commentId,subcommentId:subcommentId, like:true})
+        const dislikes = await Like.countDocuments({commentId: commentId,subcommentId:subcommentId, like:false})
 
         return res.json({likes, dislikes})
     } catch (err) {
