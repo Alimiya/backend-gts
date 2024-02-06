@@ -11,9 +11,8 @@
             crossorigin="anonymous"></script>
 </head>
 <body class="text-center">
-<header>
-    <div id="headerContainer"></div>
-</header>
+<%- include('../components/header'); %>
+
 <section class="vh-100">
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100" style="margin-top: 2%">
@@ -66,9 +65,8 @@
     </div>
 </div>
 
-<footer>
-    <div id="footerContainer"></div>
-</footer>
+<%- include('../components/footer'); %>
+
 <script>
     async function getProductData() {
         try {

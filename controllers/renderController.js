@@ -1,3 +1,5 @@
+const Cart = require('../models/cartModel')
+
 exports.getLogin = async (req, res) => {
     res.render('auth/login',{admin: req.cookies.Admin, user: req.cookies.User})
 }
@@ -27,7 +29,9 @@ exports.getCommentUpdate = async (req, res) => {
 }
 
 exports.getCart = async (req, res) => {
-    res.render('user/cart',{admin: req.cookies.Admin, user: req.cookies.User})
+    const userId = req.user._id
+    const cart = await Cart.findOne({userId: userId}).populate('productId')
+    res.render('user/cart',{cart, admin: req.cookies.Admin, user: req.cookies.User})
 }
 
 exports.getProfile = async (req, res) => {

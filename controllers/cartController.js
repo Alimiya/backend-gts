@@ -97,7 +97,6 @@ exports.buyCart = async (req, res) => {
         const newHistory = await History.insertMany(history)
         await User.findOneAndUpdate({_id: userId}, {$push: {historyId: {$each: newHistory.map(history => history._id)}}});
         await Cart.findOneAndUpdate({userId: userId}, {$set: {productId: []}})
-        res.redirect(`/profile/${userId}`)
     } catch (err) {
         console.log(err)
     }

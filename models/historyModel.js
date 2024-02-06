@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const historySchema = new mongoose.Schema({
-    quantity:{type:Number, required:true},
+    quantity:{type:Number},
     createdAt:{type:Date, default:Date.now()},
     userId: {
         type:mongoose.Schema.Types.ObjectId,

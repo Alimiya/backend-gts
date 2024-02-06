@@ -6,10 +6,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+<%- include('../components/header') %>
 
 <section>
     <div class="container">
-        <table class="table">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search..." style="margin-top: 10%">
+        <table class="table mt-5">
             <thead>
             <tr>
                 <th>Image</th>
@@ -26,6 +28,7 @@
         </table>
     </div>
 </section>
+<%- include('../components/footer') %>
 
 <script>
     document.addEventListener('DOMContentLoaded', async () => {
@@ -36,72 +39,91 @@
 
             const productTableBody = document.getElementById('productTableBody')
 
-            products.forEach(product => {
-                const row = document.createElement('tr')
-
-                const imageCell = document.createElement('td')
-                const image = document.createElement('img')
-                image.src = product.file[0]
-                image.style.width = '100px'
-                image.style.height = 'auto'
-                image.alt = product.title
-                imageCell.appendChild(image)
-
-                const titleCell = document.createElement('td')
-                titleCell.textContent = product.title
-
-                const descriptionCell = document.createElement('td')
-                descriptionCell.textContent = product.description
-
-                const categoryCell = document.createElement('td')
-                categoryCell.textContent = product.category
-
-                const priceCell = document.createElement('td')
-                priceCell.textContent = product.price
-
-                const quantityCell = document.createElement('td')
-                quantityCell.textContent = product.quantity
-
-                const actionsCell = document.createElement('td')
-
-                const aboutButton = document.createElement('button')
-                aboutButton.classList.add('btn', 'btn-warning', 'mb-1')
-                aboutButton.textContent = 'About'
-                aboutButton.addEventListener('click', () => {
-                    window.location.href = `/product/info/${product._id}`
+            function filterProducts(searchTerm) {
+                const filteredProducts = products.filter(product => {
+                    return (
+                        product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        product.category.toLowerCase().includes(searchTerm.toLowerCase())
+                    )
                 })
 
-                const updateButton = document.createElement('button')
-                updateButton.classList.add('btn', 'btn-warning', 'mb-1')
-                updateButton.textContent = 'Update'
-                updateButton.addEventListener('click', () => {
-                    window.location.href = `/admin/product/update/${product._id}`
+                productTableBody.innerHTML = ''
+
+                filteredProducts.forEach(product => {
+                    const row = document.createElement('tr')
+
+                    const imageCell = document.createElement('td')
+                    const image = document.createElement('img')
+                    image.src = product.file[0]
+                    image.style.width = '100px'
+                    image.style.height = 'auto'
+                    image.alt = product.title
+                    imageCell.appendChild(image)
+
+                    const titleCell = document.createElement('td')
+                    titleCell.textContent = product.title
+
+                    const descriptionCell = document.createElement('td')
+                    descriptionCell.textContent = product.description
+
+                    const categoryCell = document.createElement('td')
+                    categoryCell.textContent = product.category
+
+                    const priceCell = document.createElement('td')
+                    priceCell.textContent = product.price
+
+                    const quantityCell = document.createElement('td')
+                    quantityCell.textContent = product.quantity
+
+                    const actionsCell = document.createElement('td')
+
+                    const aboutButton = document.createElement('button')
+                    aboutButton.classList.add('btn', 'btn-warning', 'mb-1')
+                    aboutButton.textContent = 'About'
+                    aboutButton.addEventListener('click', () => {
+                        window.location.href = `/product/info/${product._id}`
+                    })
+
+                    const updateButton = document.createElement('button')
+                    updateButton.classList.add('btn', 'btn-warning', 'mb-1')
+                    updateButton.textContent = 'Update'
+                    updateButton.addEventListener('click', () => {
+                        window.location.href = `/admin/product/update/${product._id}`
+                    })
+
+                    const deleteForm = document.createElement('form')
+                    deleteForm.action = `/api/admin/product/delete/${product._id}`
+                    deleteForm.method = 'POST'
+                    deleteForm.style.display = 'inline-block'
+
+                    const deleteButton = document.createElement('button')
+                    deleteButton.type = 'submit'
+                    deleteButton.classList.add('btn', 'btn-danger')
+                    deleteButton.textContent = 'Delete'
+
+                    deleteForm.appendChild(deleteButton)
+                    actionsCell.appendChild(aboutButton)
+                    actionsCell.appendChild(updateButton)
+                    actionsCell.appendChild(deleteForm)
+
+                    row.appendChild(imageCell)
+                    row.appendChild(titleCell)
+                    row.appendChild(descriptionCell)
+                    row.appendChild(categoryCell)
+                    row.appendChild(priceCell)
+                    row.appendChild(quantityCell)
+                    row.appendChild(actionsCell)
+
+                    productTableBody.appendChild(row)
                 })
+            }
 
-                const deleteForm = document.createElement('form')
-                deleteForm.action = `/api/admin/product/delete/${product._id}`
-                deleteForm.method = 'POST'
-                deleteForm.style.display = 'inline-block'
+            filterProducts('')
 
-                const deleteButton = document.createElement('button')
-                deleteButton.type = 'submit'
-                deleteButton.classList.add('btn', 'btn-danger')
-                deleteButton.textContent = 'Delete'
-
-                deleteForm.appendChild(deleteButton)
-                actionsCell.appendChild(aboutButton)
-                actionsCell.appendChild(updateButton)
-                actionsCell.appendChild(deleteForm)
-
-                row.appendChild(imageCell)
-                row.appendChild(titleCell)
-                row.appendChild(descriptionCell)
-                row.appendChild(categoryCell)
-                row.appendChild(priceCell)
-                row.appendChild(quantityCell)
-                row.appendChild(actionsCell)
-
-                productTableBody.appendChild(row)
+            const searchInput = document.getElementById('searchInput')
+            searchInput.addEventListener('input', function () {
+                filterProducts(this.value.trim())
             })
         } catch (error) {
             console.error('Error fetching data:', error)
