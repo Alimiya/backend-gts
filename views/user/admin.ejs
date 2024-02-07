@@ -79,14 +79,14 @@
                     const actionsCell = document.createElement('td')
 
                     const aboutButton = document.createElement('button')
-                    aboutButton.classList.add('btn', 'btn-warning', 'mb-1')
+                    aboutButton.classList.add('btn', 'btn-warning', 'me-2')
                     aboutButton.textContent = 'About'
                     aboutButton.addEventListener('click', () => {
                         window.location.href = `/product/info/${product._id}`
                     })
 
                     const updateButton = document.createElement('button')
-                    updateButton.classList.add('btn', 'btn-warning', 'mb-1')
+                    updateButton.classList.add('btn', 'btn-warning', 'me-2')
                     updateButton.textContent = 'Update'
                     updateButton.addEventListener('click', () => {
                         window.location.href = `/admin/product/update/${product._id}`
@@ -99,7 +99,7 @@
 
                     const deleteButton = document.createElement('button')
                     deleteButton.type = 'submit'
-                    deleteButton.classList.add('btn', 'btn-danger')
+                    deleteButton.classList.add('btn', 'btn-danger', 'me-2')
                     deleteButton.textContent = 'Delete'
 
                     deleteForm.appendChild(deleteButton)

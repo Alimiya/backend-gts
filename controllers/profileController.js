@@ -77,7 +77,7 @@ exports.getUserById = async (req, res) => {
     }).populate([
         {
             path: 'historyId',
-            populate: {path: 'productId'}
+            populate: {path: 'productId', select:['quantity','title','createdAt', '_id']}
         },
 
     ])

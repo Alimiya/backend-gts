@@ -35,7 +35,7 @@ exports.addToCart = async (req, res) => {
             {$push: {productId: productId}},
             {upsert: true, new: true}
         )
-        res.redirect('/product')
+        res.redirect('/')
     } catch (err) {
         console.log(err)
     }

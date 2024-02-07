@@ -4,14 +4,13 @@ const Render = require('../controllers/renderController')
 const {verifyAdminToken, verifyUserToken} = require('../middleware/verify')
 const {ADMIN_TOKEN_SECRET, USER_TOKEN_SECRET} = process.env
 
-router.get('/', Render.getWelcome)
+router.get('/', Render.getMain)
 
 router.get('/auth/register', Render.getRegister)
 router.get('/auth/login', Render.getLogin)
 
-router.get('/product', Render.getMain)
-router.get('/product/info/:id', verifyUserToken(USER_TOKEN_SECRET), Render.getProductInfo)
-router.get('/product/info/:id', verifyAdminToken(ADMIN_TOKEN_SECRET), Render.getProductInfo)
+router.get('/product/info/:id', Render.getProductInfo)
+router.get('/product/info/:id', Render.getProductInfo)
 router.get('/product/info/:id/comment/add',verifyUserToken(USER_TOKEN_SECRET), Render.getCommentCreate)
 router.get('/product/info/:id/comment/update/:commentId',verifyUserToken(USER_TOKEN_SECRET), Render.getCommentUpdate)
 

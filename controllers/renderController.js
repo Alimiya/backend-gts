@@ -8,10 +8,6 @@ exports.getRegister = async (req, res) => {
     res.render('auth/register',{admin: req.cookies.Admin, user: req.cookies.User})
 }
 
-exports.getWelcome = async (req, res) => {
-    res.render('layout/welcome',{admin: req.cookies.Admin, user: req.cookies.User})
-}
-
 exports.getMain = async (req, res) => {
     res.render('layout/main',{admin: req.cookies.Admin, user: req.cookies.User})
 }

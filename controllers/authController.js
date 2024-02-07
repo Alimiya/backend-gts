@@ -42,7 +42,7 @@ exports.login = async (req, res) => {
         res.cookie(user.role, token, {maxAge: process.env.TOKEN_EXPIRE * 100000})
         res.header('Authorization', `Bearer ${token}`)
         if(user.role === 'Admin') return res.redirect('/admin')
-        if(user.role === 'User') return res.redirect('/product')
+        if(user.role === 'User') return res.redirect('/')
     } catch (err) {
         console.log(err)
     }

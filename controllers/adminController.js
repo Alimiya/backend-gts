@@ -37,7 +37,17 @@ exports.getUserById = async (req, res) => {
 
 exports.getProducts = async (req, res) => {
     try {
-        const products = await Product.find({})
+        const products = await Product.find({}).populate([
+            {
+                path:'historyId'
+            },
+            {
+                path:'commentId'
+            },
+            {
+                path:'subcommentId'
+            }
+        ])
         res.json({products})
     } catch (err) {
         console.log(err)

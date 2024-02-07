@@ -9,7 +9,11 @@ exports.getProducts = async (req, res) => {
             quantity: 1,
             price: 1,
             date: 1,
-            file: 1
+            file: 1,
+            commentId:1
+        }).populate({
+            path:'commentId',
+            select:'rating'
         })
         res.json({products})
     } catch (err) {
@@ -27,7 +31,8 @@ exports.getProductById = async (req, res) => {
             quantity: 1,
             price: 1,
             date: 1,
-            file: 1
+            file: 1,
+            commentId:1
         }).populate({
             path:'historyId'
         })

@@ -13,8 +13,8 @@
 <body class="text-center">
 <%- include('../components/header'); %>
 
-<section class="vh-100">
-    <div class="container py-5 h-100">
+<section class="vh-80">
+    <div class="container py-5 mt-5">
         <div class="row d-flex justify-content-center align-items-center h-100" style="margin-top: 2%">
             <div class="col-12 col-md-8 col-lg-6 col-xl-10">
                 <div class="card shadow-2-strong" style="border-radius: 3rem">
@@ -82,8 +82,9 @@
             })
 
             const hasPurchased = productIds.includes(productId)
+            console.log(hasPurchased)
             const commentButton = document.getElementById('commentButton')
-            commentButton.disabled = !hasPurchased
+            // commentButton.disabled = !hasPurchased
 
             document.getElementById('name').innerText = 'Title: ' + productData.title
 
@@ -140,9 +141,9 @@
                 <h5>Comments:</h5>
                 <div id="subcomments_${comment._id}"></div>
 
-                    <button type="button" class="btn btn-primary col-4 " onclick="window.location.href='/product/info/${comment.productId}/comment/update/${comment._id}'">Update</button>
+                    <button type="button" class="btn btn-primary me-2 mb-1" onclick="window.location.href='/product/info/${comment.productId}/comment/update/${comment._id}'">Update</button>
                 <div class="dynamic-comment">
-                    <button type="button" class="btn btn-primary col-4" onclick="toggleCommentForm('${comment._id}')">Add Comment</button>
+                    <button type="button" class="btn btn-primary me-2" onclick="toggleCommentForm('${comment._id}')">Add Comment</button>
                     <div id="commentForm_${comment._id}" style="display: none">
                         <form action="/api/subcomment/add/product/${comment.productId}/comment/${comment._id}" method="post">
                             <textarea class="form-control mt-2" rows="3" placeholder="Write your comment..." id="subcommentText" name="subcommentText"></textarea>
@@ -281,7 +282,7 @@
             window.location.href = `/product/info/${productId}/comment/add`
         })
         backButton.addEventListener('click', function() {
-            window.location.href = `/product`
+            window.location.href = `/`
         })
 
     })
