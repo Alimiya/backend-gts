@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kz">
 <head>
     <meta charset="UTF-8">
     <title>User Profile</title>
@@ -144,7 +144,7 @@
                 })
             })
         } catch (err) {
-            console.log(err)
+            res.status(500).json({ message: "Internal server error" })
         }
     }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kz">
 <head>
     <meta charset="UTF-8">
     <title>Admin</title>
@@ -10,7 +10,7 @@
 
 <section>
     <div class="container">
-        <input type="text" id="searchInput" class="form-control" placeholder="Search..." style="margin-top: 10%">
+        <input type="text" id="searchInput" pattern="[a-zA-Z]*" class="form-control" placeholder="Search..." style="margin-top: 10%">
         <table class="table mt-5">
             <thead>
             <tr>
@@ -126,7 +126,7 @@
                 filterProducts(this.value.trim())
             })
         } catch (error) {
-            console.error('Error fetching data:', error)
+            console.error("Internal server error")
         }
     })
 </script>

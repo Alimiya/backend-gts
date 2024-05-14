@@ -9,7 +9,7 @@ exports.getCartById = async (req, res) => {
         const cart = await Cart.findOne({userId: userId}, {productId: 1}).populate('productId')
         res.json({cart})
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -18,7 +18,7 @@ exports.getUserId = async (req, res) => {
         const userId = req.user._id
         return res.json({userId})
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -37,7 +37,7 @@ exports.addToCart = async (req, res) => {
         )
         res.redirect('/')
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 
 }
@@ -54,7 +54,7 @@ exports.removeFromCart = async (req, res) => {
         )
         res.redirect(`/cart/${productId}`)
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -98,6 +98,6 @@ exports.buyCart = async (req, res) => {
         await User.findOneAndUpdate({_id: userId}, {$push: {historyId: {$each: newHistory.map(history => history._id)}}});
         await Cart.findOneAndUpdate({userId: userId}, {$set: {productId: []}})
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }

@@ -21,7 +21,7 @@ exports.getUsers = async (req, res) => {
         ])
         res.json({users})
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -31,7 +31,7 @@ exports.getUserById = async (req, res) => {
         const user = await User.findOne({_id: userId}, {__v: 0})
         res.json({user})
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -50,7 +50,7 @@ exports.getProducts = async (req, res) => {
         ])
         res.json({products})
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -60,14 +60,13 @@ exports.getProductById = async (req, res) => {
         const product = await Product.findById(productId)
         res.json({product})
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
 exports.createProduct = async (req, res) => {
     const {title, description, category, quantity, price} = req.body
     const files = req.files
-    console.log(files)
 
     if (!files || files.length === 0) return res.json({message: 'No files'})
 
@@ -87,7 +86,7 @@ exports.createProduct = async (req, res) => {
         await newProduct.save()
         res.redirect('/admin')
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -97,7 +96,7 @@ exports.deleteProductById = async (req, res) => {
         const product = await Product.findByIdAndDelete(productId)
         res.redirect('/admin')
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -106,10 +105,9 @@ exports.updateProductById = async (req, res) => {
     const productId = req.params.id
     try {
         const product = await Product.findByIdAndUpdate(productId, {title, description, category, quantity, price})
-        console.log(product)
         res.redirect('/admin')
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -118,7 +116,7 @@ exports.getComments = async (req, res) => {
         const comments = await Comment.find()
         res.json({comments})
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -128,7 +126,7 @@ exports.getCommentsByProduct = async (req, res) => {
         const comments = await Comment.find({productId: productId}, {__v: 0})
         res.json({comments})
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -137,6 +135,6 @@ exports.getHistories = async (req, res) => {
         const histories = await History.find()
         res.json({histories})
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kz">
 <head>
     <meta charset="UTF-8">
     <title>Cart</title>
@@ -21,7 +21,7 @@
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <%= product.title %> - <%= product.price %>
                             <div class="form-outline" style="width: 22rem;">
-                                <input type="number" min="1" max="<%= product.quantity %>" id="quantity_<%= product._id %>" name="quantity"
+                                <input type="number" pattern="[0-9]*" min="1" max="<%= product.quantity %>" id="quantity_<%= product._id %>" name="quantity"
                                        class="form-control"/>
                                 <label class="form-label" for="quantity_<%= product._id %>">Quantity</label>
                             </div>
@@ -61,7 +61,7 @@
                     location.reload();
                 })
                 .catch(error => {
-                    console.error('Error removing product from cart:', error);
+                    console.error("Internal server error")
                 });
         });
 

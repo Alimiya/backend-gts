@@ -205,5 +205,5 @@ axios.get('http://localhost:3000/api/product')
         })
     })
     .catch(error => {
-        console.error('Error fetching data:', error)
+        console.error("Internal server error")
     })

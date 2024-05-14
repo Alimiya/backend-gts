@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kz">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
@@ -20,32 +20,32 @@
                     <form action="/api/admin/product/create" method="post" class="card-body p-5 text-center" enctype="multipart/form-data">
                         <h3 class="mb-5">Create Product</h3>
                         <div class="form-floating mb-4">
-                            <input type="text" id="title" name="title" class="form-control" required/>
+                            <input type="text" id="title" pattern="[a-zA-Z]*" name="title" class="form-control" required/>
                             <label class="form-label" for="title">Title</label>
                         </div>
 
                         <div class="form-floating mb-4">
-                            <input type="text" id="description" name="description" class="form-control" required/>
+                            <input type="text" id="description" pattern="[a-zA-Z]*" name="description" class="form-control" required/>
                             <label class="form-label" for="description">Description</label>
                         </div>
 
                         <div class="form-floating mb-4">
-                            <input type="text" id="category" name="category" class="form-control" required/>
+                            <input type="text" id="category" pattern="[a-zA-Z]*" name="category" class="form-control" required/>
                             <label class="form-label" for="category">Category</label>
                         </div>
 
                         <div class="form-floating mb-4">
-                            <input type="number" id="price" name="price" class="form-control" required/>
+                            <input type="number" id="price" pattern="[0-9]*" name="price" class="form-control" required/>
                             <label class="form-label" for="price">Price</label>
                         </div>
 
                         <div class="form-floating mb-4">
-                            <input type="number" id="quantity" name="quantity" class="form-control" required/>
+                            <input type="number" id="quantity" pattern="[0-9]*" name="quantity" class="form-control" required/>
                             <label class="form-label" for="quantity">Quantity</label>
                         </div>
 
                         <div class="form-floating mb-4">
-                            <input type="file" id="file" name="file" multiple required class="form-control" formenctype="multipart/form-data"/>
+                            <input type="file" id="file" accept="image/jpeg, image/png" name="file" multiple required class="form-control" formenctype="multipart/form-data"/>
                             <label class="form-label" for="file">Add Images</label>
                         </div>
                         <button type="submit" class="w-100 btn btn-lg btn-primary mb-2">Create</button>

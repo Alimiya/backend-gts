@@ -50,12 +50,12 @@ const start = async () => {
             .then(() => {
                 console.log("Database is connected")
             })
-            .catch((error) => console.log(error.message))
+            .catch((error) => console.error("Internal server error"))
         app.listen(process.env.PORT, () => {
             console.log(`http://localhost:${process.env.PORT}`)
         })
-    } catch (error) {
-        console.log(error)
+    } catch (err) {
+        console.error("Internal server error")
     }
 }
 

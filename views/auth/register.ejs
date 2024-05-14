@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kz">
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
@@ -18,33 +18,33 @@
                     <form action="/api/auth/register" method="post" class="card-body p-5 text-center">
                         <h3 class="mb-5">Register</h3>
                         <div class="form-floating mb-4">
-                            <input type="text" id="username" name="username" class="form-control" required/>
+                            <input type="text" id="username" pattern="[a-z]*" name="username" class="form-control" required/>
                             <label class="form-label" for="username">Username</label>
                         </div>
 
                         <div class="form-floating mb-4">
-                            <input type="text" id="name" name="name" class="form-control" required/>
+                            <input type="text" id="name" pattern="[a-zA-Z]*" name="name" class="form-control" required/>
                             <label class="form-label" for="name">Name</label>
                         </div>
 
                         <div class="form-floating mb-4">
-                            <input type="text" id="surname" name="surname" class="form-control"/>
+                            <input type="text" id="surname" pattern="[a-zA-Z]*" name="surname" class="form-control"/>
                             <label class="form-label" for="surname">Surname</label>
                         </div>
 
                         <div class="form-floating mb-4">
-                            <input type="text" id="address" name="address" class="form-control"/>
+                            <input type="text" id="address" pattern="[a-zA-Z0-9, /]*" name="address" class="form-control"/>
                             <label class="form-label" for="address">Address</label>
                         </div>
 
                         <div class="form-floating mb-4">
-                            <input type="number" id="number" name="number" class="form-control"
+                            <input type="number" id="number" pattern="[0-9]{10}" name="number" class="form-control"
                                    placeholder="Write without +7 or 8"/>
                             <label class="form-label" for="number">Phone Number</label>
                         </div>
 
                         <div class="form-floating mb-4">
-                            <input type="password" id="password" name="password" class="form-control" required/>
+                            <input type="password" id="password" pattern="[a-zA-Z0-9]*" name="password" class="form-control" required/>
                             <label class="form-label" for="password">Password</label>
                         </div>
                         <button type="submit" class="w-100 btn btn-lg btn-primary mb-2">Register</button>

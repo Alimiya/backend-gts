@@ -42,6 +42,6 @@ exports.addSubcomment = async (req, res) => {
 
         res.redirect(`/product/info/${productId}`)
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }

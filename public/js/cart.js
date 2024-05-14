@@ -5,7 +5,6 @@ async function getData() {
             axios.get(`http://localhost:3000/api/cart/${userId}`)
                 .then(response => {
                     const cart = response.data.cart
-                    console.log(cart)
                     const cartContainer = document.getElementById('cartContainer')
 
                     if (cart && cart.productId && cart.productId.length > 0) {
@@ -47,11 +46,11 @@ async function getData() {
                     }
                 })
                 .catch(error => {
-                    console.error('Error fetching data:', error)
+                    console.error("Internal server error")
                 })
         })
         .catch(error => {
-            console.error('Error fetching user ID:', error);
+            console.error("Internal server error")
         })
 }
 getData()

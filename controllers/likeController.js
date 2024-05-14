@@ -59,7 +59,7 @@ exports.isLike = async (req, res) => {
         await Comment.findByIdAndUpdate(commentId, {$addToSet: {like: like._id}})
         res.redirect(`/product/info/${productId}`)
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -124,7 +124,7 @@ exports.isLikeSubcomment = async (req, res) => {
         await Subcomment.findByIdAndUpdate(subcommentId, {$addToSet: {like: like._id}})
         res.redirect(`/product/info/${productId}`)
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -138,7 +138,7 @@ exports.getCommentCount = async (req, res) => {
 
         return res.json({likes, dislikes})
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -153,6 +153,6 @@ exports.getSubcommentCount = async (req, res) => {
 
         return res.json({likes, dislikes})
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }

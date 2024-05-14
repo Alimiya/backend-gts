@@ -24,7 +24,7 @@ exports.getCommentsByProduct = async (req, res) => {
         ])
         res.json({comments})
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -61,7 +61,7 @@ exports.addComment = async (req, res) => {
         }
         res.redirect(`/product/info/${productId}`)
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -82,6 +82,6 @@ exports.updateComment = async (req, res) => {
 
         res.redirect(`/product/info/${productId}`)
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }

@@ -15,7 +15,7 @@ exports.updateProfile = async (req, res) => {
         )
         res.redirect(`/profile/${id}`)
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -35,7 +35,7 @@ exports.updateAvatar = async (req, res) => {
         await updateUser.save()
         res.redirect(`/profile/${id}`)
     } catch (err) {
-        console.log(err)
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 exports.deleteAvatar = async (req, res) => {
@@ -46,7 +46,6 @@ exports.deleteAvatar = async (req, res) => {
 
     try {
         const user = await User.findById({_id:userId},{avatar:1})
-        console.log(user)
         if (!user) return res.json({ message: "User not found" })
 
         const avatarPath = user.avatar
@@ -56,7 +55,6 @@ exports.deleteAvatar = async (req, res) => {
 
         res.json({ message: "Avatar deleted successfully" })
     } catch (err) {
-        console.log(err)
         res.status(500).json({ message: "Internal server error" })
     }
 }

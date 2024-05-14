@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kz">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -22,22 +22,22 @@
                             <h3 class="mb-5">Update Profile</h3>
 
                             <div class="form-floating mb-4">
-                                <input type="text" id="name" name="name" class="form-control"/>
+                                <input type="text" id="name" pattern="[a-zA-Z]*" name="name" class="form-control"/>
                                 <label class="form-label" for="name">Name</label>
                             </div>
 
                             <div class="form-floating mb-4">
-                                <input type="text" id="surname" name="surname" class="form-control"/>
+                                <input type="text" id="surname" pattern="[a-zA-Z]*" name="surname" class="form-control"/>
                                 <label class="form-label" for="surname">Surname</label>
                             </div>
 
                             <div class="form-floating mb-4">
-                                <input type="text" id="address" name="address" class="form-control"/>
+                                <input type="text" id="address" pattern="[a-zA-Z0-9, /]*" name="address" class="form-control"/>
                                 <label class="form-label" for="address">Address</label>
                             </div>
 
                             <div class="form-floating mb-4">
-                                <input type="number" id="phone" name="phone" class="form-control"
+                                <input type="number" id="phone" pattern="[0-9]{10}" name="phone" class="form-control"
                                        placeholder="Write without +7 or 8"/>
                                 <label class="form-label" for="phone">Phone Number</label>
                             </div>
@@ -55,7 +55,6 @@
     function extractIdsFromUrl(url) {
         const segments = url.split("/")
         const userId = segments[5]
-        console.log(userId)
         return { userId}
     }
 
